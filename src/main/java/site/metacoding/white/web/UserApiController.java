@@ -25,7 +25,7 @@ public class UserApiController {
     // 회원정보 수정
 
     // 회원정보 보기
-    @GetMapping("/user/{id}")
+    @GetMapping("/user")
     public ResponseDto<?> findById(Long id) { // id값은 세션에서 가져옴
         return new ResponseDto<>(1, "성공", userService.findById(id));
 

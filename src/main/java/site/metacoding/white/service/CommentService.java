@@ -22,12 +22,15 @@ public class CommentService {
     @Transactional
     public CommentSaveRespDto save(CommentSaveReqDto commentSaveReqDto) {
         Optional<Board> boardOP = boardRepository.findById(commentSaveReqDto.getBoardId());
+        System.out.println("디버그 " + commentSaveReqDto.getBoardId());
+        System.out.println("디버그 " + commentSaveReqDto.getSessionUser().getId());
         if (boardOP.isPresent()) {
             Comment comment = commentSaveReqDto.toEntity(boardOP.get());
             Comment commentPS = commentRepository.save(comment);
             CommentSaveRespDto commentSaveRespDto = new CommentSaveRespDto(commentPS);
             return commentSaveRespDto;
         } else {
+
             throw new RuntimeException("게시글이 없어서 댓글을 쓸 수 없습니다.");
         }
     }
