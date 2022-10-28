@@ -2,6 +2,7 @@ package site.metacoding.white.web;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,11 @@ public class UserApiController {
     // 회원정보 수정
 
     // 회원정보 보기
+    @GetMapping("/user/{id}")
+    public ResponseDto<?> findById(Long id) { // id값은 세션에서 가져옴
+        return new ResponseDto<>(1, "성공", userService.findById(id));
+
+    }
 
     @PostMapping("/join")
     public ResponseDto<?> save(@RequestBody JoinReqDto joinReqDto) {

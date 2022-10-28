@@ -55,4 +55,11 @@ public class UserJpaApiController {
         Page<User> userList = userJpaRepository.findAll(pageRequst);
         return new ResponseDto<>(1, "성공", userList);
     }
+
+    @GetMapping("/jpa/user1")
+    public ResponseDto<?> findAll() {
+        List<User> userList1 = userJpaRepository.findAll();
+        return new ResponseDto<>(1, "성공", userList1);
+    }
+
 }

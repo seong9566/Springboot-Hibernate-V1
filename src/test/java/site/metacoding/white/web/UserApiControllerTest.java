@@ -14,12 +14,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
+import site.metacoding.white.dto.UserRespDto;
 import site.metacoding.white.dto.UserReqDto.JoinReqDto;
 import site.metacoding.white.dto.UserReqDto.LoginReqDto;
 import site.metacoding.white.service.UserService;

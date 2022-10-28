@@ -1,0 +1,84 @@
+< 읽기전용 트랜젝션 / Readonly >
+1. 조회를 할 때 팬텀 현상 때문에 트랜젝션을 건다. 
+2. 조회 + update,insert 등등 할 때는 트랜젝션을 걸지 않는다. 
+
+
+<정리>
+Read를 할때 무조건 트랜잭션을 걸자.  -> 읽기전용 트랜잭션을 걸자
+Write를 할땐 그냥 트랜잭션을 걸자 . 
+ 
+- 모든 DB의 활동에 트랜젝션을 걸어자. 
+
+Open-in-view : false
+select : 읽기전용 트랜잭션
+insert : 트랜잭션
+update : 트랜잭션
+delete : 트랜잭션
+전략 : LAZY
+
+VO : ValueObject의 약어이다. 
+Entity(ValueObject) : Entity는 DB에 있는 원데이터를 가지고 온다. -> 변경 불가능 
+ValueObject : 변경 불가능한 데이터
+=> DB에서 데이터를 끌어오기 위한 객체
+
+DTO(화면을 위한 데이터 Data Transform Object) : 변경이 가능한 데이터이다. 
+=> 화면에 뿌려주기 위한 객체
+
+IOC 컨테이너는 싱글톤 디자인 패턴을 사용한다, 즉 한개만 사용이 가능하다.
+Session은 세션 서버 한개만을 사용하기 때문에 IOC컨테이너에 떠있다.
+Request는 여러개의 요청이기 때문에 넣어두지 않았다. -> 그럼 IOC엔 한개만 사용 가능한 것들을 넣어두었을까?
+
+Persistence Context에 영속화 시키기 -> 자동으로 flush(트랜젝션 종료시)
+
+Sette는 변화하는 코드에 넣어준다.
+
+JPQL의 특징 : 엔티티만 받을 수 있다! (@Entity만 받을수 있다.)
+장점 : 1. DB에서 객체대로 맵핑시켜준다 
+ex) Board 객체 내부에 User이 있다면 네이티브 쿼리로 바로 맵핑 가능하다.
+
+단점 : 서브쿼리문을 작성할땐 네이티브 쿼리문으로 불가능 
+
+H2 특징
+1. Auto INCREMENT가 작동하지 않는다.
+=>그래서 MariaDB로 개발 하고 H2로 테스트 한다면, h2를 MODE=MYSQL로 작동한다.
+2. H2에선 user 이란 테이블의 이름을 인식못한다. 그래서 users로 바꾸어주는것이좋다.
+
+
+Junit의 특징
+메서드의 실행순서가 없다. - 메서드가 가장 위에있다고 먼저 실행 되는것이 아니다.
+-> @Order(1) 을하면 첫번째로 실행된다.
+
+테스트에서 가장 중요한것 
+1. 테스트 격리이다.
+테스트 격리란? 
+테스트를 할 때 마다 데이터가 롤백이 되지않는다.이것을 해결하기 위해서 트랜잭션어노테이션을 걸어준다.
+
+<통합테스트의 단점>
+1. 데이터가 롤백이 되지 않는다. 즉 테스트 격리가 되지않는다.
+이것이 무슨 말 이지? -> 예를들어 첫 메서드에서 insert를 했다.
+그럼 두번째 메서드를 실행할때 똑같은 데이터로 insert 테스트를 한다 . 그럼에러가발생
+이것이 테스트가 격리 되지않았을 경우이다. 
+<해결 방법>: @Sql("classpath:truncate.sql") 
+1. resources내부에 truncate.sql을 선언 해준다.
+2. 테스트 클래스 위에 어노테이션 @Sql("classpath:truncate.sql") 작성
+- truncate는 메서드가 실행되고 끝날때마다 테이블의 행을 모두 날려준다.
+특징 - 제약조건이 걸려 있으면 테이블의 실행 순서가 원하는 대로 되지않는다.
+해결 방법
+SET REFERENTIAL_INTEGRITY FALSE;
+truncate table comment;
+truncate table board;
+truncate table users;
+SET REFERENTIAL_INTEGRITY TRUE;
+그럼 걸려있는 FK(제약조건)을 잠시 다 날려주고 테스트가 끝나면 다시 걸어준다.
+
+팁 : truncate는 AUTO INCREMENT까지 모두 초기화 시켜준다. 
+그래서 테스트에서 첫 insert -> truncate -> 두번째 insert
+
+<통합 테스트 정리>
+1. 테스트용 파일이 필요하다.
+2. H2는 MariaDB가 아니기 때문에 DB설정이 필요하다.
+3. 테스트는 메서드마다 테스트 격리가 필요하다.
+4. SpringBoot 통합 테스트는 Rollback이 자동으로 되지않는다.
+5. 4번을 해결하기 위해 truncate를 사용
+6. truncate를 사용하기 위해 FK를 모두 날려주어야한다.
+

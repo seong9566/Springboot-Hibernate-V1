@@ -3,6 +3,7 @@ package site.metacoding.white.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -47,6 +48,10 @@ public class Board {
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 
 }
