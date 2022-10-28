@@ -26,8 +26,9 @@ public class UserApiController {
 
     // 회원정보 보기
     @GetMapping("/user")
-    public ResponseDto<?> findById(Long id) { // id값은 세션에서 가져옴
-        return new ResponseDto<>(1, "성공", userService.findById(id));
+    public ResponseDto<?> findById() { // id값은 세션에서 가져옴
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+        return new ResponseDto<>(1, "성공", userService.findById(sessionUser.getId()));
 
     }
 
