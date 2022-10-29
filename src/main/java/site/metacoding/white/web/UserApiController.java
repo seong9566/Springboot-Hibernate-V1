@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +13,7 @@ import site.metacoding.white.dto.ResponseDto;
 import site.metacoding.white.dto.SessionUser;
 import site.metacoding.white.dto.UserReqDto.JoinReqDto;
 import site.metacoding.white.dto.UserReqDto.LoginReqDto;
+import site.metacoding.white.dto.UserReqDto.UpdateReqDto;
 import site.metacoding.white.dto.UserRespDto.JoinRespDto;
 import site.metacoding.white.service.UserService;
 
@@ -23,6 +25,12 @@ public class UserApiController {
     private final HttpSession session;
 
     // 회원정보 수정
+    @PutMapping("/update")
+    public ResponseDto<?> update(@RequestBody UpdateReqDto updateReqDto, Long id) {
+        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
+        updateReqDto.setId(sessionUser.getId());
+        return new ResponseDto<>(1, "성공", userService.update(updateReqDto));
+    }
 
     // 회원정보 보기
     @GetMapping("/user")

@@ -30,4 +30,19 @@ public class UserRespDto {
             this.username = user.getUsername();
         }
     }
+
+    @Getter
+    @Setter
+    public static class UpdateRespDto {
+        private String username;
+        private String password;
+        private Long id;
+
+        public UpdateRespDto(User user) {
+            this.id = user.getId();
+            this.username = user.getUsername();
+            this.password = user.getPassword();
+        }
+    }
+
 }

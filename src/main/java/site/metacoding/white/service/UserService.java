@@ -11,7 +11,9 @@ import site.metacoding.white.domain.UserRepository;
 import site.metacoding.white.dto.SessionUser;
 import site.metacoding.white.dto.UserReqDto.JoinReqDto;
 import site.metacoding.white.dto.UserReqDto.LoginReqDto;
+import site.metacoding.white.dto.UserReqDto.UpdateReqDto;
 import site.metacoding.white.dto.UserRespDto.JoinRespDto;
+import site.metacoding.white.dto.UserRespDto.UpdateRespDto;
 import site.metacoding.white.dto.UserRespDto.UserDetailRespDto;
 import site.metacoding.white.util.SHA256;
 
@@ -63,4 +65,16 @@ public class UserService {
         }
     } // 트랜잭션 종료
 
+    @Transactional
+    public UpdateRespDto update(UpdateReqDto updateReqDto) {
+        Long id = updateReqDto.getId();
+        Optional<User> userOP = userRepository.findById(id);
+        if (userOP.isPresent()) {
+            User userPS = userOP.get();
+            userPS.update(updateReqDto.getUsername(), updateReqDto.getPassword());
+            return new UpdateRespDto(userPS);
+        } else {
+            throw new RuntimeException("해당 " + id + "로 수정을 할 수 없습니다.");
+        }
+    }
 }

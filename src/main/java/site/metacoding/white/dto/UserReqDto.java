@@ -22,6 +22,19 @@ public class UserReqDto {
     public static class LoginReqDto {
         private String username;
         private String password;
+        private Long id;// 서비스 로직
+    }
+
+    @Getter
+    @Setter
+    public static class UpdateReqDto {
+        private String username;
+        private String password;
+        private Long id;
+
+        public User toEntity() {
+            return User.builder().username(username).password(password).id(id).build();
+        }
     }
 
 }
